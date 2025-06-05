@@ -1,5 +1,5 @@
-import { supabase } from './supabase';
-import { AuthFormData, RegisterFormData } from '@/types/auth';
+import { supabase } from "./supabase";
+import { AuthFormData, RegisterFormData } from "@/types/auth";
 
 export async function signIn({ email, password }: AuthFormData) {
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -41,7 +41,7 @@ export async function signOut() {
 
 export async function resetPassword(email: string) {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/reset-password`,
+    redirectTo: `${window.location.origin}/auth/reset-password`,
   });
 
   if (error) {
@@ -61,10 +61,10 @@ export async function updatePassword(password: string) {
 
 export async function getSession() {
   const { data, error } = await supabase.auth.getSession();
-  
+
   if (error) {
     throw new Error(error.message);
   }
-  
+
   return data;
 }

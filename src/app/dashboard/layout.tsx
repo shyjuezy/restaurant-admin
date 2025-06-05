@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/hooks/use-auth';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { DashboardHeader } from '@/components/dashboard/header';
-import { Loader2 } from 'lucide-react';
+import { useAuth } from "@/hooks/use-auth";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+import { Loader2 } from "lucide-react";
 
 export default function DashboardLayout({
   children,
@@ -16,7 +16,7 @@ export default function DashboardLayout({
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push('/auth/login');
+      router.push("/auth/login");
     }
   }, [user, isLoading, router]);
 
@@ -34,7 +34,6 @@ export default function DashboardLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <DashboardHeader />
       <main className="flex-1">{children}</main>
     </div>
   );

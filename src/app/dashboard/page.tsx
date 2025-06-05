@@ -1,105 +1,201 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/use-auth';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Activity, Settings, User } from 'lucide-react';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { DashboardLayout } from "@/components/dashboard/layout";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  TrendingUp,
+  Users,
+  ShoppingBag,
+  DollarSign,
+  Clock,
+  Star,
+  MapPin,
+  ChefHat,
+} from "lucide-react";
 
 export default function DashboardPage() {
   const { user } = useAuth();
-  const [greeting, setGreeting] = useState('');
+  const [greeting, setGreeting] = useState("");
 
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 12) {
-      setGreeting('Good morning');
+      setGreeting("Good morning");
     } else if (hour < 18) {
-      setGreeting('Good afternoon');
+      setGreeting("Good afternoon");
     } else {
-      setGreeting('Good evening');
+      setGreeting("Good evening");
     }
   }, []);
 
-  const name = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'there';
+  const name =
+    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "there";
 
   return (
-    <div className="container max-w-7xl py-8">
+    <DashboardLayout>
       <div className="flex flex-col gap-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
             {greeting}, {name}!
           </h1>
           <p className="text-muted-foreground">
-            Welcome to your dashboard. Here's an overview of your account.
+            Welcome to your restaurant dashboard. Here&apos;s an overview of
+            your business.
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Key Metrics */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Account Status
+                Total Revenue
               </CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">Active</div>
+              <div className="text-2xl font-bold">$12,345</div>
               <p className="text-xs text-muted-foreground">
-                Your account is in good standing
+                +20.1% from last month
               </p>
             </CardContent>
-            <CardFooter>
-              <Link href="/dashboard/profile" className="w-full">
-                <Button variant="outline" className="w-full">
-                  <User className="mr-2 h-4 w-4" />
-                  View Profile
-                </Button>
-              </Link>
-            </CardFooter>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Security Settings
+                Orders Today
               </CardTitle>
-              <Settings className="h-4 w-4 text-muted-foreground" />
+              <ShoppingBag className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">Standard</div>
+              <div className="text-2xl font-bold">127</div>
               <p className="text-xs text-muted-foreground">
-                Enable two-factor authentication for extra security
+                +12% from yesterday
               </p>
             </CardContent>
-            <CardFooter>
-              <Link href="/dashboard/settings" className="w-full">
-                <Button variant="outline" className="w-full">
-                  <Settings className="mr-2 h-4 w-4" />
-                  Manage Settings
-                </Button>
-              </Link>
-            </CardFooter>
           </Card>
 
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Active Customers
+              </CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">2,847</div>
+              <p className="text-xs text-muted-foreground">
+                +5.2% from last week
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Avg. Rating</CardTitle>
+              <Star className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">4.8</div>
+              <p className="text-xs text-muted-foreground">
+                Based on 1,234 reviews
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Activity & Quick Actions */}
+        <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="h-5 w-5" />
+                Recent Orders
+              </CardTitle>
               <CardDescription>
-                Your recent account activity
+                Latest orders from your restaurant
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      Login Successful
-                    </p>
+                    <p className="text-sm font-medium">Order #1234</p>
                     <p className="text-xs text-muted-foreground">
-                      {new Date().toLocaleDateString()} at{' '}
-                      {new Date().toLocaleTimeString()}
+                      Margherita Pizza, Caesar Salad - $24.99
+                    </p>
+                  </div>
+                  <div className="text-sm text-green-600 font-medium">
+                    Completed
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">Order #1235</p>
+                    <p className="text-xs text-muted-foreground">
+                      Chicken Alfredo, Garlic Bread - $18.50
+                    </p>
+                  </div>
+                  <div className="text-sm text-yellow-600 font-medium">
+                    Preparing
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">Order #1236</p>
+                    <p className="text-xs text-muted-foreground">
+                      Fish & Chips, Coleslaw - $16.75
+                    </p>
+                  </div>
+                  <div className="text-sm text-blue-600 font-medium">New</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
+                Quick Actions
+              </CardTitle>
+              <CardDescription>Common tasks and shortcuts</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-3">
+                <div className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 cursor-pointer">
+                  <ChefHat className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="text-sm font-medium">Add New Menu Item</p>
+                    <p className="text-xs text-muted-foreground">
+                      Create a new dish for your menu
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 cursor-pointer">
+                  <MapPin className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="text-sm font-medium">Manage Locations</p>
+                    <p className="text-xs text-muted-foreground">
+                      Update restaurant locations
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 cursor-pointer">
+                  <Users className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="text-sm font-medium">View Customer Reviews</p>
+                    <p className="text-xs text-muted-foreground">
+                      Check recent feedback
                     </p>
                   </div>
                 </div>
@@ -107,28 +203,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-
-        <div className="grid gap-6 md:grid-cols-1">
-          <Card>
-            <CardHeader>
-              <CardTitle>Welcome to AuthApp</CardTitle>
-              <CardDescription>
-                Your secure authentication solution
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <p>
-                  This is a demo dashboard for the AuthApp authentication system. In a real application, you would see your personalized content and features here.
-                </p>
-                <p>
-                  The authentication system provides secure login, registration, password reset, and account management using Supabase.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }
