@@ -1,0 +1,13 @@
+{
+  "folders": [
+    {
+      "path": "../.."
+    },
+    {
+      "path": "../../../restaurant-ui"
+    },
+    {
+      "path": "../../../../backend/restaurant"
+    }
+  ]
+}

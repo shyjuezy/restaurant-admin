@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
+import { useLocationStore } from "@/stores/location-store";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,6 +17,7 @@ import Link from "next/link";
 
 export function Header() {
   const { user, signOut } = useAuth();
+  const { brandName, selectedLocation } = useLocationStore();
 
   const handleSignOut = async () => {
     await signOut();
@@ -39,9 +41,11 @@ export function Header() {
             <ChefHat className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-xl font-bold">Restaurant Admin</h1>
+            <h1 className="text-xl font-bold">
+              {brandName || "Restaurant"} Admin
+            </h1>
             <p className="text-xs text-muted-foreground">
-              Management Dashboard
+              {selectedLocation?.name || "Management Dashboard"}
             </p>
           </div>
         </div>
