@@ -15,14 +15,20 @@ export function LocationInitializer({
   brandName,
   defaultLocationSlug,
 }: LocationInitializerProps) {
-  const { setBrandName, setLocations, setSelectedLocation } =
-    useLocationStore();
+  const {
+    selectedLocation,
+    setBrandName,
+    setLocations,
+    setSelectedLocation,
+    setLoading,
+    setError,
+  } = useLocationStore();
 
   // Fetch locations on the client side using React Query
   const {
     data: locationsResult,
-    isLoading,
-    error,
+    isLoading: queryLoading,
+    error: queryError,
   } = useQuery({
     queryKey: ["locations", brandName],
     queryFn: () => getLocationsByBrandName(brandName),
@@ -50,11 +56,11 @@ export function LocationInitializer({
         // If default location not found, use the first location
         setSelectedLocation(locationsResult.data[0]);
       }
-    } else if (!isLoading && (error || !locationsResult?.success)) {
+    } else if (!queryLoading && (queryError || !locationsResult?.success)) {
       // If there's an error or no data, create a fallback location
       console.warn(
         "Failed to fetch locations, using fallback",
-        error ||
+        queryError ||
           (!locationsResult?.success ? locationsResult?.error : "Unknown error")
       );
 
@@ -79,12 +85,42 @@ export function LocationInitializer({
     brandName,
     defaultLocationSlug,
     locationsResult,
-    isLoading,
-    error,
+    queryLoading,
+    queryError,
     setBrandName,
     setLocations,
     setSelectedLocation,
   ]);
+
+  // Fetch locations on app load
+  useEffect(() => {
+    const fetchLocationsData = async () => {
+      setLoading(true);
+      try {
+        const result = await getLocationsByBrandName(brandName);
+        if (result.success) {
+          setLocations(result.data);
+          // If user had a selected location, validate it still exists
+          if (selectedLocation) {
+            const stillExists = result.data.find(
+              (loc: Location) => loc.slug === selectedLocation.slug
+            );
+            if (!stillExists) {
+              // setSelectedLocation(null); // Only set to null if your setter allows null
+            }
+          }
+        } else {
+          setError(result.error || "Failed to fetch locations");
+        }
+      } catch (error) {
+        setError(error instanceof Error ? error.message : "Unknown error");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLocationsData();
+  }, [brandName, selectedLocation, setError, setLoading, setLocations]);
 
   // This component doesn't render anything, it just initializes the store
   return null;
