@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getMenuCategories } from "@/lib/api";
+import { getMenuCategories } from "@/actions/menu";
 import { MenuCategory } from "@/lib/types";
 import { ZodError } from "zod";
 

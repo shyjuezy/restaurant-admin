@@ -14,6 +14,7 @@ import { FolderOpen, Plus, Edit, Trash2, Eye, Loader2 } from "lucide-react";
 import { useLocationStore } from "@/stores/location-store";
 import { useMenuCategories } from "@/hooks/use-menu-categories";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 export default function CategoriesPage() {
   const { brandName, selectedLocation } = useLocationStore();
@@ -33,14 +34,16 @@ export default function CategoriesPage() {
     menuSlug,
   });
 
-  // Show error toast if there's an error
-  if (error) {
-    toast({
-      title: "Error",
-      description: error.message || "Failed to load menu categories",
-      variant: "destructive",
-    });
-  }
+  // Show error toast if there's an error (using useEffect to prevent infinite re-renders)
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to load menu categories",
+        variant: "destructive",
+      });
+    }
+  }, [error, toast]);
 
   return (
     <DashboardLayout>

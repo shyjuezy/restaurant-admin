@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocationStore } from "@/stores/location-store";
-import { getLocationsByBrandName } from "@/lib/api";
+import { getLocationsByBrandName } from "@/actions/locations";
 import { Location } from "@/lib/types";
 
 interface LocationInitializerProps {
