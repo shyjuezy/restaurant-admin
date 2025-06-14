@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export interface Location {
   locationId: number;
   name: string;
@@ -11,6 +13,31 @@ export interface Location {
   longitude: number;
   active: boolean;
 }
+
+export interface MenuCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  displayOrder: number;
+  altText: string;
+  imageUrl: string;
+  isActive: boolean;
+}
+
+// Zod schemas for runtime validation
+export const menuCategorySchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  slug: z.string(),
+  description: z.string(),
+  displayOrder: z.number(),
+  altText: z.string(),
+  imageUrl: z.string(),
+  isActive: z.boolean(),
+});
+
+export const menuCategoriesArraySchema = z.array(menuCategorySchema);
 
 export type ActionResult<T> =
   | { success: true; data: T }
