@@ -3,7 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getMenuCategories } from "@/actions/menu";
 import { MenuCategory } from "@/lib/types";
-import { ZodError } from "zod";
 
 export interface UseMenuCategoriesParams {
   brandName: string;
@@ -12,7 +11,7 @@ export interface UseMenuCategoriesParams {
 }
 
 /**
- * Hook for fetching menu categories with authentication and validation handling
+ * Hook for fetching menu categories using server actions with client credentials authentication
  */
 export function useMenuCategories({
   brandName,
@@ -25,20 +24,6 @@ export function useMenuCategories({
       const result = await getMenuCategories(brandName, locationSlug, menuSlug);
 
       if (!result.success) {
-        // Handle different types of errors
-        if (result.status === 401) {
-          throw new Error("Authentication required. Please log in again.");
-        }
-        if (result.status === 403) {
-          throw new Error(
-            "Access denied. You do not have permission to view menu categories."
-          );
-        }
-        if (result.status === 404) {
-          throw new Error(
-            "Menu categories not found for the specified location."
-          );
-        }
         throw new Error(result.error || "Failed to fetch menu categories");
       }
 
@@ -47,11 +32,10 @@ export function useMenuCategories({
     enabled: !!(brandName && locationSlug && menuSlug),
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: (failureCount, error) => {
-      // Don't retry on authentication or validation errors
+      // Don't retry on authentication errors
       if (
-        error.message.includes("Authentication required") ||
-        error.message.includes("validation") ||
-        error.message.includes("Access denied")
+        error.message.includes("Authentication") ||
+        error.message.includes("JWT authentication failed")
       ) {
         return false;
       }
